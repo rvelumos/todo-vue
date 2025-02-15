@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Task;
+use App\Models\TaskList;
 use App\Models\User;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -15,7 +17,7 @@ class TaskListTest extends TestCase
         $taskList = TaskList::factory()->create(['user_id' => $user->id]);
 
         $this->actingAs($user, 'sanctum')
-            ->postJson('/api/tasks', [
+            ->post('tasks.store', [
                 'title' => 'New task',
                 'task_list_id' => $taskList->id,
             ])
@@ -25,14 +27,14 @@ class TaskListTest extends TestCase
     }
 
     #[Test]
-    public function test_user_cannot_add_task_to_another_users_tasklist(): void
+    public function expect_user_cannot_add_task_to_another_users_tasklist(): void
     {
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
         $taskList = TaskList::factory()->create(['user_id' => $user1->id]);
 
         $this->actingAs($user2, 'sanctum')
-            ->postJson('/api/tasks', [
+            ->post('tasks.store', [
                 'title' => 'Not allowed',
                 'task_list_id' => $taskList->id,
             ])
@@ -40,24 +42,26 @@ class TaskListTest extends TestCase
     }
 
     #[Test]
-    public function test_guest_cannot_access_tasks(): void
+    public function expect_guest_cannot_access_tasklists(): void
     {
-        $this->getJson('/api/tasks')
+        $this->get(route('tasklists.index'))
             ->assertStatus(401);
     }
 
     #[Test]
-    public function test_user_can_update_task(): void
+    public function expect_test_user_can_update_task(): void
     {
         $user = User::factory()->create();
         $taskList = TaskList::factory()->create(['user_id' => $user->id]);
         $task = Task::factory()->create(['task_list_id' => $taskList->id]);
 
+        $updatedData = [
+            'title' => 'Edit',
+            'completed' => true
+        ];
+
         $this->actingAs($user, 'sanctum')
-            ->putJson("/api/tasks/{$task->id}", [
-                'title' => 'Edit',
-                'completed' => true
-            ])
+            ->put(route('tasks.update',$task), $updatedData)
             ->assertStatus(200);
 
         $this->assertDatabaseHas('tasks', ['title' => 'Edit', 'completed' => true]);
@@ -71,7 +75,7 @@ class TaskListTest extends TestCase
         $task = Task::factory()->create(['task_list_id' => $taskList->id]);
 
         $this->actingAs($user, 'sanctum')
-            ->deleteJson("/api/tasks/{$task->id}")
+            ->delete(route("tasks.destroy",$task))
             ->assertStatus(200);
 
         $this->assertDatabaseMissing('tasks', ['id' => $task->id]);

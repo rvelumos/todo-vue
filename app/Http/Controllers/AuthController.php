@@ -33,7 +33,7 @@ class AuthController extends Controller
 
         auth()->login($user);
 
-        return redirect()->route('/dashboard');
+        return redirect()->route('tasks.index')->with('success', 'Account aangemaakt!');
     }
 
     protected function validator(array $data): \Illuminate\Validation\Validator
