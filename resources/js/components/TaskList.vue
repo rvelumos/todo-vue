@@ -5,7 +5,6 @@
         <input v-model="newTask" placeholder="Nieuwe taak toevoegen">
         <button @click="addTask">Toevoegen</button>
 
-        <!-- Taken weergeven -->
         <ul>
             <li v-for="task in list.tasks" :key="task.id">
                 <input type="checkbox" v-model="task.completed" @change="toggleComplete(task)">
@@ -28,7 +27,7 @@ export default {
     },
     methods: {
         addTask() {
-            axios.post('/api/tasks', {
+            axios.post('/tasks', {
                 title: this.newTask,
                 task_list_id: this.list.id
             }).then(res => {
@@ -37,19 +36,19 @@ export default {
             });
         },
         updateTask(task) {
-            axios.put(`/api/tasks/${task.id}`, {
+            axios.put(`/tasks/${task.id}`, {
                 title: task.title,
                 completed: task.completed
             });
         },
         toggleComplete(task) {
-            axios.put(`/api/tasks/${task.id}`, {
+            axios.put(`/tasks/${task.id}`, {
                 title: task.title,
                 completed: task.completed
             });
         },
         deleteTask(id) {
-            axios.delete(`/api/tasks/${id}`).then(() => {
+            axios.delete(`/tasks/${id}`).then(() => {
                 this.list.tasks = this.list.tasks.filter(t => t.id !== id);
             });
         }

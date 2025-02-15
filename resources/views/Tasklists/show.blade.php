@@ -2,7 +2,6 @@
 
 @section('content')
     <div id="app">
-        <task-list :tasklist-id="{{ $tasklist->id }}"></task-list>
+        <task-lists :tasklist-id="{{ $tasklist->id }}"></task-lists>
     </div>
-    <script src="{{ mix('js/app.js') }}"></script>
 @endsection

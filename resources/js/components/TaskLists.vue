@@ -27,17 +27,17 @@ export default {
         };
     },
     mounted() {
-        axios.get('/api/tasklists').then(res => this.taskLists = res.data);
+        axios.get('/tasklists').then(res => this.taskLists = res.data);
     },
     methods: {
         addList() {
-            axios.post('/api/tasklists', { name: this.newList }).then(res => {
+            axios.post('/tasklists', { name: this.newList }).then(res => {
                 this.taskLists.push(res.data);
                 this.newList = '';
             });
         },
         deleteList(id) {
-            axios.delete(`/api/tasklists/${id}`).then(() => {
+            axios.delete(`/tasklists/${id}`).then(() => {
                 this.taskLists = this.taskLists.filter(l => l.id !== id);
             });
         }
