@@ -2,47 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
+use App\Models\TaskList;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate(['title' => 'required|string|max:255', 'task_list_id' => 'required|exists:task_lists,id']);
+
+        $taskList = TaskList::findOrFail($request->task_list_id);
+        $this->authorize('update', $taskList);
+
+        return $taskList->tasks()->create($request->only('title'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(Request $request, Task $task)
     {
-        //
+        $this->authorize('update', $task->taskList);
+        $task->update($request->only('title', 'completed'));
+        return response()->json(['message' => 'Updated']);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Task $task)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $this->authorize('delete', $task->taskList);
+        $task->delete();
+        return response()->json(['message' => 'Deleted']);
     }
 }
+
