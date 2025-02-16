@@ -6,10 +6,13 @@ use App\Models\Task;
 use App\Models\TaskList;
 use App\Models\User;
 use PHPUnit\Framework\Attributes\Test;
+use Plannr\Laravel\FastRefreshDatabase\Traits\FastRefreshDatabase;
 use Tests\TestCase;
 
 class TaskListTest extends TestCase
 {
+    use FastRefreshDatabase;
+
     #[Test]
     public function expect_test_user_can_create_task(): void
     {
