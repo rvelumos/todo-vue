@@ -14,6 +14,11 @@ class TaskListController extends Controller
         return view('tasklists.index');
     }
 
+    public function getTaskLists(): JsonResponse
+    {
+        return response()->json(Auth::user()->taskLists()->with('tasks')->get());
+    }
+
     public function store(Request $request)
     {
         $request->validate(['name' => 'required|string|max:255']);

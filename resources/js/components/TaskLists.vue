@@ -4,13 +4,13 @@
         <input v-model="newList" placeholder="Nieuwe lijst toevoegen">
         <button @click="addList">Toevoegen</button>
 
-        <ul>
+        <ul v-if="taskLists.length">
             <li v-for="list in taskLists" :key="list.id">
                 {{ list.name }}
                 <button @click="deleteList(list.id)">🗑️</button>
-                <TaskList :list="list"/>
             </li>
         </ul>
+        <p v-else>No task lists found.</p>
     </div>
 </template>
 
@@ -27,11 +27,16 @@ export default {
         };
     },
     mounted() {
-        axios.get('/tasklists').then(res => this.taskLists = res.data);
+        axios.get('/api/tasklists')
+            .then(res => {
+                console.log("Received data:", res.data);
+                this.taskLists = res.data;
+            })
+            .catch(err => console.error("Error fetching tasklists:", err));
     },
     methods: {
         addList() {
-            axios.post('/tasklists', { name: this.newList }).then(res => {
+            axios.post('/api/tasklists', { name: this.newList }).then(res => {
                 this.taskLists.push(res.data);
                 this.newList = '';
             });
