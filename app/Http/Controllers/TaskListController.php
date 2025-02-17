@@ -3,13 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\TaskList;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TaskListController extends Controller
 {
-    public function index()
+
+    use AuthorizesRequests;
+
+    public function index(): View|Application|Factory
     {
         return view('tasklists.index');
     }
@@ -19,11 +27,17 @@ class TaskListController extends Controller
         return response()->json(Auth::user()->taskLists()->with('tasks')->get());
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        $request->validate(['name' => 'required|string|max:255']);
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
 
-        return view('tasklists.index');
+        Auth::user()->taskLists()->create([
+            'name' => $request->name,
+        ]);
+
+        return redirect()->route('tasklists.index')->with('success', __('messages.task_list_created'));
     }
 
     public function show(TaskList $taskList): TaskList
@@ -32,7 +46,7 @@ class TaskListController extends Controller
         return $taskList->load('tasks');
     }
 
-    public function update(Request $request, TaskList $tasklist)
+    public function update(Request $request, TaskList $tasklist): RedirectResponse
     {
         $this->authorize('update', $tasklist);
 
@@ -42,7 +56,7 @@ class TaskListController extends Controller
 
         $tasklist->update(['name' => $request->name]);
 
-        return redirect()->route('tasklists.index')->with('success', 'Tasklist bijgewerkt!');
+        return redirect()->route('tasklists.index')->with('success', __('messages.task_list_updated'));
     }
 
 
@@ -50,7 +64,7 @@ class TaskListController extends Controller
     {
         $this->authorize('delete', $taskList);
         $taskList->delete();
-        return response()->json(['message' => 'Deleted']);
+        return response()->json(['message' => __('messages.task_list_deleted')]);
     }
 }
 

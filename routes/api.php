@@ -15,7 +15,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/tasklists/{taskList}', [TaskListController::class, 'update'])->name('tasklists.update');
     Route::delete('/tasklists/{taskList}', [TaskListController::class, 'destroy'])->name('tasklists.destroy');
 
-    Route::post('/tasks', [TaskController::class, 'store']);
-    Route::put('/tasks/{task}', [TaskController::class, 'update']);
-    Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
+    Route::get('/tasks', [TaskController::class, 'store'])->name('tasks.index');
+    Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.create');
+    Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+    Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 });
