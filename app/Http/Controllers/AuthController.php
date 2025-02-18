@@ -71,6 +71,7 @@ class AuthController extends Controller
 
     public function login(Request $request): RedirectResponse
     {
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
