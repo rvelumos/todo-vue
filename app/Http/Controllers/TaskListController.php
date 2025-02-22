@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskListController extends Controller
 {
-
     use AuthorizesRequests;
 
     public function index(): View|Application|Factory
@@ -67,4 +66,3 @@ class TaskListController extends Controller
         return response()->json(['message' => __('messages.task_list_deleted')]);
     }
 }
-

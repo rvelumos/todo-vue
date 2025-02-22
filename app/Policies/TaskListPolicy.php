@@ -7,7 +7,6 @@ use App\Models\User;
 
 class TaskListPolicy
 {
-
     public function view(User $user, TaskList $taskList): bool
     {
         return $user->id === $taskList->user_id;

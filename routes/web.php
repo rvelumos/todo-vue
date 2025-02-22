@@ -15,4 +15,3 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/tasklists', [TaskListController::class, 'index'])->name('tasklists.index');
     Route::get('/tasklists/{taskList}', [TaskListController::class, 'show'])->name('tasklists.show');
 });
-

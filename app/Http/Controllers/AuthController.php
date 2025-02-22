@@ -26,7 +26,6 @@ class AuthController extends Controller
         try {
             $this->validator($request->all())->validate();
         } catch (ValidationException $e) {
-
         }
 
         $user = $this->create($request->all());

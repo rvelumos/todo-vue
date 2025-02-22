@@ -8,7 +8,6 @@ use Illuminate\Support\ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
-
     protected array $policies = [
         TaskList::class => TaskListPolicy::class,
     ];

@@ -10,13 +10,11 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-
     public function run(): void
     {
 
         User::factory(5)
         ->has(TaskList::factory(2)
-        ->has(Task::factory(3))
-        )->create();
+        ->has(Task::factory(3)))->create();
     }
 }
